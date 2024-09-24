@@ -88,6 +88,36 @@ results_28 <- map_dfr(group_combinations, ~{
 #------------------ Print results
 print(results_28)
 
+
+#------------------ Visualize
+ggarrange(
+  
+  data_serology_analysis_t21 %>% 
+  group_by(group_code, score) %>% 
+  count %>% ungroup %>% 
+  ggplot(mapping = aes(x = group_code, y = n, fill = score)) +
+  geom_bar(stat = "identity", position = "fill", colour = "grey20", size = 0.5, width = 1.0) +
+  labs(title = "Distribution of Scores by Group on Day 21",
+       x = "",
+       y = "Proportion",
+       fill = "Score") +
+  theme_minimal() + scale_fill_brewer(palette="Set1"),
+  
+  data_serology_analysis_t28 %>% 
+    group_by(group_code, score) %>% 
+    count %>% ungroup %>% 
+    ggplot(mapping = aes(x = group_code, y = n, fill = score)) +
+    geom_bar(stat = "identity", position = "fill", colour = "grey20", size = 0.5, width = 1.0) +
+    labs(title = "Distribution of Scores by Group on Day 28",
+         x = "",
+         y = "Proportion",
+         fill = "Score") +
+    theme_minimal() + scale_fill_brewer(palette="Set1"), 
+  
+  common.legend = T
+  
+)
+
 #------------------------------------------------------------------------------------------------------------# 
 # Clean 
 #------------------------------------------------------------------------------------------------------------# 
