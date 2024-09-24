@@ -88,6 +88,14 @@ results_28 <- map_dfr(group_combinations, ~{
 #------------------ Print results
 print(results_28)
 
+#------------------------------------------------------------------------------------------------------------# 
+# Clean 
+#------------------------------------------------------------------------------------------------------------# 
+rm(group_combinations, observed_diffs, observed_pairwise_diffs, observed_stat, results_28, results_21, 
+   perm_pairwise_diffs); gc()
+
+
+
 
 
 
