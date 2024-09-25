@@ -14,7 +14,6 @@ source(file = "Scripts/Script_serology_clean.R")
 #------------------ Analyses
 # Onset of the immune response: Whether there's a difference in the time at which the immune response becomes noticeable between the groups.
 # Severity of the immune response: Whether there is a difference in the intensity or severity of the immune response between groups over time.
-source(file = "Scripts/Script_serology_analysis.R")
-
-
+source(file = "Scripts/Script_serology_analysis.R") # severity
+source(file = "Scripts/Script_serology_analysis_onset.R") # onset 
 
