@@ -1,9 +1,9 @@
 ##############################################################################################################
 #------------------------------------------------------------------------------------------------------------# 
-# Title: Analysis data Serology
+# Title: Analysis data Serology - Severity
 #------------------------------------------------------------------------------------------------------------# 
 ##############################################################################################################
-
+set.seed(12345)
 #------------------ Permutation 
 # In a permutation test, you shuffle the labels of your groups (or time points) many times and calculate 
 # the test statistic (e.g., difference in means between groups) for each permutation. This creates a null 
@@ -16,23 +16,11 @@
 # calculate the difference in the immune response between two time points (T2 and T1) for each group and 
 # then compares these differences between groups.
 
-#------------------------------------------------------------------------------------------------------------# 
-# Dag 21 
-#------------------------------------------------------------------------------------------------------------# 
-#------------------ Data prep
-data_serology_analysis_t21 <- data_serology %>%
-  filter(!is.na(time_point)) %>% 
-  mutate(score = factor(score)) %>% 
-  filter(day == 21)
-# data_serology_analysis$score
-# [1] 0 0 3 1 3 4 4 4 0 0 5 5 3 5 3 3 0 0 5 5 4 4 2 4 4 5 5 4 5 5 0 0
-# Levels: 0 1 2 3 4 5
-
 #------------------ Function to perform permutation test between two groups using Fisher's Exact Test
 permutation_test <- function(data, group1, group2, n_permutations = 1000) {
   # Subset data for the two groups
   subset_data <- data %>% filter(group_code %in% c(group1, group2))
- 
+  
   # Observed test statistic: Fisher's Exact Test
   observed_stat <- fisher.test(table(subset_data$score, subset_data$group_code))$p.value
   
@@ -49,6 +37,37 @@ permutation_test <- function(data, group1, group2, n_permutations = 1000) {
   
   return(p_value)
 }
+
+
+#------------------------------------------------------------------------------------------------------------# 
+# Dag 14 
+#------------------------------------------------------------------------------------------------------------# 
+#------------------ Data prep
+data_serology_analysis_t14 <- data_serology %>%
+  mutate(score = factor(score)) %>% 
+  filter(day == 14)
+
+#------------------ Get all pairwise combinations of groups
+group_combinations <- combn(unique(data_serology_analysis_t14$group_code), 2, simplify = FALSE)
+
+#------------------ Perform permutation tests for all pairwise combinations
+results_14 <- map_dfr(group_combinations, ~{
+  group1 <- .x[1]
+  group2 <- .x[2]
+  p_value <- permutation_test(data=data_serology_analysis_t14, group1, group2)
+  tibble(group1 = group1, group2 = group2, p_value = p_value)
+})
+
+#------------------ Print results
+print(results_14)
+
+#------------------------------------------------------------------------------------------------------------# 
+# Dag 21 
+#------------------------------------------------------------------------------------------------------------# 
+#------------------ Data prep
+data_serology_analysis_t21 <- data_serology %>%
+  mutate(score = factor(score)) %>% 
+  filter(day == 21)
 
 #------------------ Get all pairwise combinations of groups
 group_combinations <- combn(unique(data_serology_analysis_t21$group_code), 2, simplify = FALSE)
@@ -70,7 +89,6 @@ print(results_21)
 
 #------------------ Data prep
 data_serology_analysis_t28 <- data_serology %>%
-  filter(!is.na(time_point)) %>% 
   mutate(score = factor(score)) %>% 
   filter(day == 28)
 
@@ -121,8 +139,8 @@ ggarrange(
 #------------------------------------------------------------------------------------------------------------# 
 # Clean 
 #------------------------------------------------------------------------------------------------------------# 
-rm(group_combinations, observed_diffs, observed_pairwise_diffs, observed_stat, results_28, results_21, 
-   perm_pairwise_diffs); gc()
+rm(group_combinations, observed_diffs, observed_pairwise_diffs, results_28, results_21, results_14,
+   data_serology_analysis_t14, data_serology_analysis_t21, data_serology_analysis_t28); gc()
 
 
 
