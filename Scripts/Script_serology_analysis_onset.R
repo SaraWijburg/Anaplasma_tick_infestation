@@ -7,20 +7,20 @@
 
 # set.seed(12345)
 # 
-# data_onset <- data_serology %>%
-#   filter(!is.na(result_num)) %>%
-#   group_by(group_code, lamb_id) %>%
-#   filter(day == min(day)) %>%
-#   ungroup %>%
-#   select(group_code, lamb_id, time = day) %>%
-#   bind_rows(data_serology %>% filter(group_code == "C") %>% distinct(group_code, lamb_id)) %>%
-#   mutate(status = if_else(group_code == "C", 0, 1),
-#          # Replace Inf with the maximum day if no response was observed
-#          time = if_else(is.na(time), 28, time), 
-#          group_code = factor(group_code)) %>%
-#   rename(group = group_code) %>%
-#   # Filter data to include only events (status == 1)
-#   filter(status == 1)
+data_onset <- data_serology %>%
+  filter(!is.na(result_num)) %>%
+  group_by(group_code, lamb_id) %>%
+  filter(day == min(day)) %>%
+  ungroup %>%
+  select(group_code, lamb_id, time = day) %>%
+  bind_rows(data_serology %>% filter(group_code == "C") %>% distinct(group_code, lamb_id)) %>%
+  mutate(status = if_else(group_code == "C", 0, 1),
+         # Replace Inf with the maximum day if no response was observed
+         time = if_else(is.na(time), 28, time),
+         group_code = factor(group_code)) %>%
+  rename(group = group_code) %>%
+  # Filter data to include only events (status == 1)
+  filter(status == 1)
 # 
 # # Perform Kruskal-Wallis test
 # kruskal_test <- kruskal_test(time ~ group, data = data_onset, distribution = approximate(nresample = 10000))
