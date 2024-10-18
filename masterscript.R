@@ -11,7 +11,8 @@ rm(list=ls())
 ##############################################################################################################
 
 # Welke packages worden gebruikt in dit script?
-gebruikte_packages <- c("tidyverse", "readxl", "writexl","lubridate", "ggpubr", "janitor", "survival", "coin", "multcomp")
+gebruikte_packages <- c("tidyverse", "readxl", "writexl","lubridate", "ggpubr", "janitor", "survival", "coin", "multcomp",
+                        "rstatix")
 
 # Welke packages zijn al geinstallerd?
 geinstalleerde_packages <- rownames(installed.packages())
@@ -36,5 +37,6 @@ select <- dplyr::select
 # Serology
 ##############################################################################################################
 source(file = "Scripts/Script_serology.R")
+source(file = "Scripts/Script_pcr.R")
 
 
