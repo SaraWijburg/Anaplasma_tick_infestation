@@ -60,8 +60,6 @@ results_14 <- map_dfr(group_combinations, ~{
 
 results_14 <- results_14 %>%
   mutate(p_adjusted = p.adjust(p_value, method = "bonferroni"))
-results_14 <- results_14 %>%
-  mutate(p_adjusted = p.adjust(p_value, method = "BH"))
 
 #------------------ Print results
 print(results_14)
@@ -86,6 +84,9 @@ results_21 <- map_dfr(group_combinations, ~{
 })
 
 #------------------ Print results
+results_21 <- results_21 %>%
+  mutate(p_adjusted = p.adjust(p_value, method = "bonferroni"))
+
 print(results_21)
 
 #------------------------------------------------------------------------------------------------------------# 
@@ -109,6 +110,8 @@ results_28 <- map_dfr(group_combinations, ~{
 })
 
 #------------------ Print results
+results_28 <- results_28 %>%
+  mutate(p_adjusted = p.adjust(p_value, method = "bonferroni"))
 print(results_28)
 
 
