@@ -36,10 +36,52 @@ last_positive %>%
   labs(x = "", y = "Last day positive")
 
 # Perform the Kruskal-Wallis test
-kruskal_test <- kruskal_test(last_positive_time ~ group, data = last_positive)
+#------------------ Function to perform permutation test between two groups using Fisher's Exact Test
+permutation_test_krus <- function(data, group1, group2, n_permutations = 1000) {
+  # Subset data for the two groups
+  subset_data <- data %>% filter(group %in% c(group1, group2))
+  
+  # Observed test statistic: Kruskal-Wallis Test
+  observed_stat <- kruskal_test(last_positive_time ~ group, data = subset_data)$p
+  
+  # Permutation test
+  perm_stats <- numeric(n_permutations)
+  
+  for (i in 1:n_permutations) {
+    permuted_outcome <- sample(subset_data$last_positive_time)
+    permuted_data <- subset_data %>% mutate(last_positive_time = permuted_outcome)
+    perm_stats[i] <- kruskal_test(last_positive_time ~ group, data = permuted_data)$p
+  }
+  
+  # Calculate p-value
+  p_value <- mean(perm_stats <= observed_stat)
+  return(p_value)
+}
+
+
+#------------------ Get all pairwise combinations of groups
+group_combinations <- combn(unique(last_positive$group), 2, simplify = FALSE)
+
+#------------------ Perform permutation tests for all pairwise combinations
+results_pcr <- map_dfr(group_combinations, ~{
+  group1 <- .x[1]
+  group2 <- .x[2]
+  p_value <- permutation_test_krus(data = last_positive, group1 = group1, group2 = group2)
+  tibble(group1 = group1, group2 = group2, p_value = p_value)
+})
+
+# Correct for multiple testing
+results_pcr <- results_pcr %>%
+  mutate(p_adjusted = p.adjust(p_value, method = "BH"))
+
+# Print the results
+print(results_pcr)
+
+
+kruskal_test1 <-  kruskal_test(last_positive_time ~ group, data = last_positive)
 
 # Print the result of the Kruskal-Wallis test
-print(kruskal_test)
+print(kruskal_test1)
 
 # If the Kruskal-Wallis test is significant, perform post-hoc pairwise comparisons using the Dunn test
 post_hoc <- last_positive %>%
