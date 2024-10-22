@@ -58,6 +58,11 @@ results_14 <- map_dfr(group_combinations, ~{
   tibble(group1 = group1, group2 = group2, p_value = p_value)
 })
 
+results_14 <- results_14 %>%
+  mutate(p_adjusted = p.adjust(p_value, method = "bonferroni"))
+results_14 <- results_14 %>%
+  mutate(p_adjusted = p.adjust(p_value, method = "BH"))
+
 #------------------ Print results
 print(results_14)
 
