@@ -24,8 +24,8 @@ data_serology <- serology_data_org1 %>%
            result == "512" ~ 3, 
            result == "1024" ~ 4, 
            result == "2048" ~ 5, 
-           result == "4096" ~ 6, 
-           result == "8192" ~ 7, 
+           result == "4096" ~ 5, 
+           result == "8192" ~ 5, 
            TRUE ~ NA_real_),
          # Add other time points
          time_point = case_when(
