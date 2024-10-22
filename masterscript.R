@@ -11,8 +11,11 @@ rm(list=ls())
 ##############################################################################################################
 
 # Welke packages worden gebruikt in dit script?
+# install.packages("devtools")
+# devtools::install_github("dustinfife/flexplot")
+# devtools::install_github("dustinfife/fifer"); 
 gebruikte_packages <- c("tidyverse", "readxl", "writexl","lubridate", "ggpubr", "janitor", "survival", "coin", "multcomp",
-                        "rstatix", "RVAideMemoire")
+                        "rstatix", "RVAideMemoire", "plotrix", "fifer", "flexplot")
 
 # Welke packages zijn al geinstallerd?
 geinstalleerde_packages <- rownames(installed.packages())
@@ -38,5 +41,5 @@ select <- dplyr::select
 ##############################################################################################################
 source(file = "Scripts/Script_serology.R")
 source(file = "Scripts/Script_pcr.R")
-
+source(file = "Scripts/Script_teken.R")
 
