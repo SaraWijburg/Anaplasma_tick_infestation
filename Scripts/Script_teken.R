@@ -22,7 +22,10 @@ data_ticks$group %>% table
 # Reshape the data for plot
 data_long <- data_ticks %>%
   select(group, ticknr_rivm, contains("yn")) %>% 
-  pivot_longer(cols = starts_with("anaplasma_yn"):starts_with("rickettsia_helvetica_yn"), 
+  mutate(borrelia_yn = borrelia_flab_yn + borrelia_ospa_yn,
+         borrelia_yn = if_else(borrelia_yn == 0, 0, 1)) %>% 
+  select(-c(borrelia_flab_yn, borrelia_ospa_yn)) %>% 
+  pivot_longer(cols = starts_with("anaplasma_yn"):starts_with("borrelia_yn"), 
                names_to = "pathogen", 
                values_to = "presence") %>%
   mutate(pathogen = gsub("_yn", "", pathogen)) %>% 
@@ -81,28 +84,39 @@ fisher_test <- fisher_test(contingency_table)
 print(fisher_test)
 pairwise_fisher_test(contingency_table, p.adjust.method = "bonferroni", detailed = T)
 
-#------------------ borrelia_flab
-data_ticks %>% select(group, borrelia_flab_yn) %>% table
+#------------------ borrelia
 # Data prep
-data_borrelia_flab <- data_long %>%
-  filter(pathogen == "borrelia_flab")
+data_borrelia <- data_long %>%
+  filter(pathogen == "borrelia")
 # Create a contingency table
-contingency_table <- xtabs(n ~ group + presence, data = data_borrelia_flab)
+contingency_table <- xtabs(n ~ group + presence, data = data_borrelia)
 # Perform the chi-squared test
 fisher_test <- fisher_test(contingency_table)
 print(fisher_test)
 pairwise_fisher_test(contingency_table, p.adjust.method = "bonferroni", detailed = T)
 
-#------------------ borrelia_ospa 
-data_ticks %>% select(group, borrelia_ospa_yn) %>% table
-data_borrelia_ospa <- data_long %>%
-  filter(pathogen == "borrelia_ospa")
-# Create a contingency table
-contingency_table <- xtabs(n ~ group + presence, data = data_borrelia_ospa)
-# Perform the chi-squared test
-fisher_test <- fisher_test(contingency_table)
-print(fisher_test)
-pairwise_fisher_test(contingency_table, p.adjust.method = "bonferroni", detailed = T)
+#------------------ borrelia_flab
+# data_ticks %>% select(group, borrelia_flab_yn) %>% table
+# # Data prep
+# data_borrelia_flab <- data_long %>%
+#   filter(pathogen == "borrelia_flab")
+# # Create a contingency table
+# contingency_table <- xtabs(n ~ group + presence, data = data_borrelia_flab)
+# # Perform the chi-squared test
+# fisher_test <- fisher_test(contingency_table)
+# print(fisher_test)
+# pairwise_fisher_test(contingency_table, p.adjust.method = "bonferroni", detailed = T)
+# 
+# #------------------ borrelia_ospa 
+# data_ticks %>% select(group, borrelia_ospa_yn) %>% table
+# data_borrelia_ospa <- data_long %>%
+#   filter(pathogen == "borrelia_ospa")
+# # Create a contingency table
+# contingency_table <- xtabs(n ~ group + presence, data = data_borrelia_ospa)
+# # Perform the chi-squared test
+# fisher_test <- fisher_test(contingency_table)
+# print(fisher_test)
+# pairwise_fisher_test(contingency_table, p.adjust.method = "bonferroni", detailed = T)
 
 #------------------ miyamotoi
 data_ticks %>% select(group, miyamotoi_yn) %>% table # alles negatief
