@@ -37,7 +37,7 @@ last_positive %>%
   labs(x = "", y = "Last day positive")
 
 # Perform the Kruskal-Wallis test
-#------------------ Function to perform permutation test between two groups using Fisher's Exact Test
+#------------------ Function to perform permutation test between two groups using Kruskal-Wallis test
 permutation_test_krus <- function(data, group1, group2, n_permutations = 1000) {
   # Subset data for the two groups
   subset_data <- data %>% filter(group %in% c(group1, group2))
@@ -74,10 +74,6 @@ results_pcr <- map_dfr(group_combinations, ~{
 # Correct for multiple testing
 results_pcr <- results_pcr %>%
   mutate(p_adjusted = p.adjust(p_value, method = "bonferroni"))
-
-# Print the results
-print(results_pcr)
-
 
 # kruskal_test1 <-  kruskal_test(last_positive_time ~ group, data = last_positive)
 # 
