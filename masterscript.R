@@ -37,7 +37,7 @@ options(scipen=999) # Remove scientific notation
 select <- dplyr::select
 
 ##############################################################################################################
-# Serology
+# Analyses 
 ##############################################################################################################
 source(file = "Scripts/Script_serology.R")
 source(file = "Scripts/Script_pcr.R")
