@@ -42,4 +42,4 @@ select <- dplyr::select
 source(file = "Scripts/Script_serology.R")
 source(file = "Scripts/Script_pcr.R")
 source(file = "Scripts/Script_teken.R")
-
+source(file = "Scripts/Script_hematologie.R")
