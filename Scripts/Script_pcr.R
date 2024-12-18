@@ -36,6 +36,38 @@ last_positive %>%
   theme_classic() + 
   labs(x = "", y = "Last day positive")
 
+# Plot for pos-neg per day 
+library(ggtext)
+
+plot_pcr <- data_pcr %>% 
+  select(group, lamb, date_nr, pos_neg) %>% 
+  mutate(pos_neg = if_else(group == "C", 0, pos_neg), 
+         pos_neg = if_else(pos_neg == 0, "PCR neg.", "PCR pos."),
+         group = factor(group, levels = c("A", "AT", "T", "C")),
+         lamb_group = str_c("**", group, "** - ", lamb),
+         lamb_group = factor(lamb_group, levels = c(
+           "**C** - A", "**C** - E", "**C** - I", "**C** - P",
+           "**T** - B", "**T** - C", "**T** - K", "**T** - O",
+          "**AT** - F", "**AT** - G", "**AT** - J", "**AT** - N",
+          "**A** - D", "**A** - H", "**A** - L", "**A** - M")),
+         date_nr = date_nr %>% as.character(), 
+         date_nr = factor(date_nr, levels = c("0", "3", "4", "6", "8", "10", "12", "14", "17", "21", "24", "28"))) %>% 
+  ggplot(mapping = aes(x = date_nr, y = lamb_group, fill = pos_neg)) +
+  geom_tile(color = "white", lwd = 1.5, linetype = 1) +
+  scale_fill_manual(values = c("red", "green")) +
+  labs(y = "", x = "", fill = "") +
+  theme_minimal() + 
+  theme( axis.text.y = element_markdown(hjust = 0), 
+         text = element_text(size = 16), 
+         legend.position= "bottom")
+
+# Export 
+tiff(filename = str_c("Output/plot_pcr_pos_neg_", format(now(), format = "%Y%m%d_%H%M"), ".tiff"), width =659, height = 526)
+plot_pcr %>% print
+dev.off()
+
+
+
 # Perform the Kruskal-Wallis test
 #------------------ Function to perform permutation test between two groups using Kruskal-Wallis test
 permutation_test_krus <- function(data, group1, group2, n_permutations = 1000) {
