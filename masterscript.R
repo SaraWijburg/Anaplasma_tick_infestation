@@ -15,7 +15,7 @@ rm(list=ls())
 # devtools::install_github("dustinfife/flexplot")
 # devtools::install_github("dustinfife/fifer"); 
 gebruikte_packages <- c("tidyverse", "readxl", "writexl","lubridate", "ggpubr", "janitor", "survival", "coin", "multcomp",
-                        "rstatix", "RVAideMemoire", "plotrix", "fifer", "flexplot")
+                        "rstatix", "RVAideMemoire", "plotrix", "fifer", "flexplot", "gridExtra")
 
 # Welke packages zijn al geinstallerd?
 geinstalleerde_packages <- rownames(installed.packages())
