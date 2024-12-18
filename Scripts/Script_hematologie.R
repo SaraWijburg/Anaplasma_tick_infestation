@@ -37,7 +37,7 @@ function_plot_hematologie <- function(data, column_name, x_label, title){
     ggplot(summary_hematologie_df, aes(x = day, y = mean_value, fill = group, color = group)) +
     geom_line() +  
     geom_ribbon(aes(ymin = mean_value - se, ymax = mean_value + se), alpha = 0.2, color = NA) +  
-    labs(title = "", x = "Time", y = title, fill = "", color = "") +
+    labs(title = "", x = "Days", y = title, fill = "", color = "") +
     # scale_color_manual(values = c("A" = "blue", "AT" = "red", "C" = "green", "T" = "purple")) + 
     # scale_fill_manual(values = c("A" = "blue", "AT" = "red", "C" = "green", "T" = "purple")) + 
     theme_classic() + 
